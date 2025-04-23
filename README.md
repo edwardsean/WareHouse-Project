@@ -2,6 +2,82 @@
 
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
+## Github
+
+## Github Commands for Collaborators
+
+### First Time Setup
+```bash
+# Clone the repository
+git clone https://github.com/edwardsean/WareHouse-Project.git
+cd warehousedb
+
+# Create and switch to your feature branch
+git checkout -b <your-branch-name>
+```
+
+### Daily Workflow
+```bash
+# Get latest changes from remote
+git fetch origin
+
+# Pull latest changes from main
+git pull origin main
+
+# Check working tree status (modified files, staged changes)
+git status
+
+# List all local branches (* shows current branch)
+git branch
+
+# Switch to your feature branch
+git checkout <your-branch-name>
+
+# Stage and commit changes
+git add .
+git commit -m "Your commit message"
+
+# Push changes to your branch
+git push origin <your-branch-name>
+```
+
+### Common Scenarios
+```bash
+# Switch between branches
+git checkout branch-name
+
+# Discard local changes in a file
+git checkout -- filename
+
+# Merge main into your branch
+git checkout your-branch-name
+git pull origin main
+
+# Create a new branch
+git checkout -b new-branch-name
+
+# View commit history
+git log --oneline
+```
+
+### Pull Request Workflow
+1. Push your changes to your branch
+2. Go to GitHub repository
+3. Click "Pull requests"
+4. Click "New pull request"
+5. Select base:main and compare:your-branch
+6. Add description and create pull request
+
+### Resolving Conflicts
+```bash
+# If you encounter merge conflicts
+git pull origin main
+# Fix conflicts in VS Code
+git add .
+git commit -m "Resolve merge conflicts"
+git push origin your-branch-name
+```
+
 ## Getting Started
 
 First, run the development server:
