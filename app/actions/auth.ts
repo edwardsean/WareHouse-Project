@@ -40,20 +40,29 @@ export async function handleSignUp(formData: FormData) {
     const lastName = formData.get('lastName') as string
     const bankAccount = formData.get('bankAccount') as string
 
-    // First create auth user to get the ID
+    // Get the highest customer ID and increment by 1
+    const { data: maxId } = await supabase
+      .from('customer')
+      .select('customerid')
+      .order('customerid', { ascending: false })
+      .limit(1)
+      .single()
+
+    const newCustomerId = maxId ? maxId.customerid + 1 : 1
+
+    // Create auth user
     const { data: authData, error: authError } = await supabase.auth.signUp({
       email,
       password,
       options: {
         data: {
-          type: 'customer'  // Add user type to auth metadata
+          type: 'customer'
         },
         emailRedirectTo: `${process.env.NEXT_PUBLIC_SITE_URL}/auth/callback`,
       }
     })
 
     if (authError) {
-      // Return the exact error message from Supabase for debugging
       return { error: authError.message }
     }
 
@@ -64,15 +73,15 @@ export async function handleSignUp(formData: FormData) {
     // Hash password
     const hashedPassword = await bcrypt.hash(password, 10)
 
-    // Then insert customer data using auth user ID
+    // Insert customer with new integer ID
     const { error: customerError } = await supabase
       .from('customer')
       .insert([
         {
-          customerid: parseInt(authData.user.id),  // Convert UUID to integer
+          customerid: newCustomerId,
           firstname: firstName,
           lastname: lastName,
-          email: email.toLowerCase(), // Convert email to lowercase
+          email: email.toLowerCase(),
           password: hashedPassword,
           bankaccount: bankAccount ? parseInt(bankAccount) : null
         }
@@ -84,9 +93,9 @@ export async function handleSignUp(formData: FormData) {
       return { error: customerError.message }
     }
 
-    redirect('/auth/verify')
+    return { success: true }
   } catch (error) {
-    console.error('Registration error:', error)  // Add logging for debugging
+    console.error('Registration error:', error)
     return { error: 'An unexpected error occurred' }
   }
 }

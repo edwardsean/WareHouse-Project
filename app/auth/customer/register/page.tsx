@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import { handleSignUp } from '@/app/actions/auth'
 
 interface FormErrors {
@@ -11,8 +12,8 @@ interface FormErrors {
   bankAccount?: string;
   password?: string;
 }
-
 export default function CustomerRegister() {
+  const router = useRouter()
   const [error, setError] = useState<string | null>(null)
   const [formErrors, setFormErrors] = useState<FormErrors>({})
 
@@ -49,6 +50,8 @@ export default function CustomerRegister() {
     const result = await handleSignUp(formData)
     if (result?.error) {
       setError(result.error)
+    } else if (result?.success) {
+      router.push('/auth/verify')
     }
   }
 

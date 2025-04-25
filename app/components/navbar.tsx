@@ -20,19 +20,33 @@ export default function Navbar() {
       process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
     )
 
+    async function checkUserType(email: string) {
+      // Check if user exists in employee table
+      const { data: employee } = await supabase
+        .from('employee')
+        .select('email')
+        .eq('email', email)
+        .single()
+
+      if (employee) {
+        setUserType('employee')
+      } else {
+        setUserType('customer')
+      }
+    }
+
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session)
-      if (session?.user) {
-        // Get user type from auth metadata
-        setUserType(session.user.user_metadata.type)
+      if (session?.user?.email) {
+        checkUserType(session.user.email)
       }
       setIsLoading(false)
     })
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       setSession(session)
-      if (session?.user) {
-        setUserType(session.user.user_metadata.type)
+      if (session?.user?.email) {
+        checkUserType(session.user.email)
       } else {
         setUserType(null)
       }
@@ -68,9 +82,9 @@ export default function Navbar() {
             <>
               {userType && (
                 <span className={`px-2 py-1 rounded text-sm ${
-                  userType === 'Employee' ? 'bg-green-100 text-green-800' : 'bg-blue-100 text-blue-800'
+                  userType.toLowerCase() === 'employee' ? 'bg-green-100 text-green-800' : 'bg-blue-100 text-blue-800'
                 }`}>
-                  {userType}
+                  {userType.charAt(0).toUpperCase() + userType.slice(1)}
                 </span>
               )}
               <Link href="/product">
