@@ -73,8 +73,12 @@ export default function Navbar() {
                   {userType}
                 </span>
               )}
-              <Link href="/startup/create">
-                <span>Create</span>
+              <Link href="/product">
+                <span>Product</span>
+              </Link>
+
+              <Link href="/warehouse">
+                <span>Warehouse</span>
               </Link>
 
               <form action={onSignOut}>
