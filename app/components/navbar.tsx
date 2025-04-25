@@ -9,6 +9,7 @@ import { createBrowserClient } from '@supabase/ssr'
 
 export default function Navbar() {
   const [session, setSession] = useState<any>(undefined)
+  const [userType, setUserType] = useState<string | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const router = useRouter()
@@ -21,11 +22,20 @@ export default function Navbar() {
 
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session)
+      if (session?.user) {
+        // Get user type from auth metadata
+        setUserType(session.user.user_metadata.type)
+      }
       setIsLoading(false)
     })
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       setSession(session)
+      if (session?.user) {
+        setUserType(session.user.user_metadata.type)
+      } else {
+        setUserType(null)
+      }
     })
 
     return () => subscription.unsubscribe()
@@ -56,6 +66,13 @@ export default function Navbar() {
         <div className='flex items-center gap-5 text-black'>
           {session ? (
             <>
+              {userType && (
+                <span className={`px-2 py-1 rounded text-sm ${
+                  userType === 'Employee' ? 'bg-green-100 text-green-800' : 'bg-blue-100 text-blue-800'
+                }`}>
+                  {userType}
+                </span>
+              )}
               <Link href="/startup/create">
                 <span>Create</span>
               </Link>

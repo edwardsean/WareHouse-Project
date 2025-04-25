@@ -46,8 +46,7 @@ export async function handleSignUp(formData: FormData) {
       password,
       options: {
         data: {
-          first_name: firstName,
-          last_name: lastName
+          type: 'customer'  // Add user type to auth metadata
         },
         emailRedirectTo: `${process.env.NEXT_PUBLIC_SITE_URL}/auth/callback`,
       }

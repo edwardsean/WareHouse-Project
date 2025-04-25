@@ -12,7 +12,7 @@ interface FormErrors {
   password?: string;
 }
 
-export default function Register() {
+export default function CustomerRegister() {
   const [error, setError] = useState<string | null>(null)
   const [formErrors, setFormErrors] = useState<FormErrors>({})
 
@@ -55,6 +55,14 @@ export default function Register() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8">
+        <div className="flex justify-start">
+          <Link 
+            href="/auth/customer/signin"
+            className="text-gray-600 hover:text-gray-900 flex items-center"
+          >
+            <span>← Back</span>
+          </Link>
+        </div>
         <div>
           <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
             Create your account
